@@ -1,0 +1,27 @@
+# entorno y cachés
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+setup.log
+
+# lo que genera cada persona al usar el programa (no se comparte)
+runs/
+data/profile.json
+data/memory.json
+data/mando.json
+# tus ajustes personales (IP del servidor, modelo...): ver docs/CONFIGURACION.md. Ojo: git no admite comentarios al final de
+# una línea; con el comentario detrás, este archivo NO se ignoraba
+config.local.toml
+*.wav
+
+# capturas del juego: pesan decenas de MB. Las de demostración se regeneran con `python3 make_demo.py`;
+# las reales (tuyas) se quedan en tu disco
+captures/*.f1raw
+captures/*.f1raw.gz
+*.f1raw
+*.f1raw.gz
+!captures/.gitkeep
+
+# copias de trabajo de los agentes de Claude Code (no son parte del proyecto)
+.claude/

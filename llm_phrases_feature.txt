@@ -1,0 +1,15 @@
+# Herramientas nuevas de la feature IA (11 nov 2026): ritmo de rivales, estado del coche, ventana, quién falta por parar, hipótesis
+# formato: frase | herramienta esperada (a/b = cualquiera vale)
+¿cómo va de ritmo el de delante? | ritmo_rival
+ritmo de los de delante | ritmo_rival/ritmo/hueco
+¿{P} va más rápido que yo? | ritmo_rival/comparar/vs_rival
+¿qué información tienes del coche? | estado_coche/danos/actualizacion
+¿cómo está el coche? | estado_coche/danos
+¿entre qué vueltas debería parar? | ventana_parada/estrategia
+¿cuándo se abre la ventana de parada? | ventana_parada/estrategia
+¿quién de los de delante tiene que parar todavía? | faltan_parar
+¿le falta parar al de delante? | faltan_parar
+¿y si no paro? | que_pasa_si/overcut
+¿y si paro en la doce a duros? | que_pasa_si/compuesto
+qué tiempo ha hecho el primero | piloto/mejor_vuelta
+vamos a ganar | viabilidad

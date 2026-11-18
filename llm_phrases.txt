@@ -1,0 +1,50 @@
+# frase | herramientas esperadas (vacío = charla/sin herramienta). Sirve para medir el LLM real: python voice.py llm
+¿En qué sesión estamos? | sesion
+¿Quién va primero? | piloto
+¿Cómo va el segundo clasificado? | piloto
+¿Quién es el tercer clasificado? | piloto
+Información de {P} | piloto
+¿Dónde está {P}? | piloto
+¿Cuál es la mejor vuelta de la sesión? | mejor_vuelta
+¿Cuál es mi mejor vuelta? | mejor_vuelta
+¿Qué tiempo hice? | mejor_vuelta/ritmo
+¿Hola, alguna actualización? | actualizacion
+¿Cómo vamos? | actualizacion
+¿En qué posición voy? | posicion
+¿Quién está detrás de mí? | hueco
+¿Cuánto le saco al de atrás? | hueco
+¿Cómo voy contra {P}? | vs_rival/hueco
+¿Qué neumáticos tiene {P}? | neumaticos
+¿Cómo van mis gomas? | neumaticos
+¿Qué llevan los otros coches? | neumaticos
+¿Cuánto combustible me queda? | combustible
+¿Cuánta batería tengo? | ers
+¿Cómo he usado el ERS en la última vuelta? | ers_vuelta
+¿Tengo daños? | danos
+¿Va a llover? | clima
+¿Cuántas vueltas faltan? | vueltas
+¿Dónde pierdo tiempo? | analisis_vuelta
+¿Dónde puedo mejorar en mi vuelta? | analisis_vuelta
+Compárame con el primero | comparar
+Compárame con mi compañero | comparar
+¿Cómo va mi compañero? | companero
+¿Qué estimas para la carrera? | estimacion
+¿Tienes posibles estrategias? | estrategia
+No sé qué hacer | estrategia
+¿Es mejor el medio o el duro? | compuesto
+¿Qué tal el neumático medio? | compuesto
+¿Qué neumático pongo en la próxima parada? | compuesto
+¿Puedo hacer un undercut? | undercut
+¿Y si alargo la parada? | overcut
+Quiero acabar quinto | objetivo
+¿Podemos ganar la carrera? | viabilidad
+Menos avisos de combustible | avisos
+Más actualizaciones del ERS | avisos
+No me siento cómodo con las gomas | gomas_mal
+Cállate un rato | silencio
+Mándame ánimos para la clasificación |
+Hola, ¿me escuchas? |
+Empiezo vuelta lanzada con el blando |
+Entro a boxes |
+¿Quién ganó el mundial de 1994? |
+Gracias, buen trabajo |

@@ -1,0 +1,14 @@
+# Frases reales del informe del 11 nov 2026 (Brasil) que antes fallaban o se respondían mal
+# formato: frase | herramienta esperada (a/b = cualquiera vale)
+¿Cuándo va a cambiar el tiempo? | clima
+¿Cuánto va a seguir esta lluvia? | clima
+¿Cuándo la pista se va a secar? | clima
+¿Cuándo se va a acabar la lluvia? | clima
+¿Cuándo va a parar de llover? | clima
+Cuánto más de este clima. | clima
+¿Cuál es el mejor neumático para estas condiciones? | compuesto/elegir_compuesto/neumaticos
+Mejor neumático para estas condiciones. | compuesto/elegir_compuesto/neumaticos
+¿De qué posición voy? | posicion
+¿{P} en qué vuelta más o menos me va a alcanzar? | alcance
+¿En qué vuelta debería parar? | estrategia/ventana_parada
+El coche de adelante ya paró. | faltan_parar/hueco

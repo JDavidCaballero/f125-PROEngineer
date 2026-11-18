@@ -1,0 +1,24 @@
+# Copia este archivo a `config.local.toml` (queda fuera de git) y deja SOLO lo que quieras cambiar:
+#     cp config.local.example.toml config.local.toml
+# Todo lo que no pongas aquí se toma de config.toml. Guía completa: docs/CONFIGURACION.md
+
+# ── EL MODELO: cambia estas dos líneas para usar el que quieras (Qwen es solo lo que hemos probado) ──
+[llm]
+url = "http://127.0.0.1:1234/v1"     # (1) DIRECCIÓN del servidor: este equipo, o la IP de otro (p. ej. "http://192.168.1.50:1234/v1"). Termina en /v1
+model = "qwen/qwen3.5-9b"            # (2) NOMBRE del modelo, exacto. Para verlos:  python3 config.py   ("" = el cargado, solo en LM Studio)
+# Opcionales, según tu modelo (explicación en docs/CONFIGURACION.md):
+# timeout_s = 12                     # sube si tu modelo es lento (20–30)
+# primary = true                     # false = modelo pequeño que se equivoca: solo ayuda cuando las reglas no entienden
+# compose = true                     # false = no dejar que el modelo reescriba las respuestas
+# enabled = true                     # false = sin modelo, solo reglas
+# send_enable_thinking_false = false # true = si tu modelo «piensa» y no puedes apagar Think en el servidor
+
+# [network]
+# port = 20777                       # puerto UDP que escucha el programa (el mismo que pongas en el juego)
+
+# [engineer]
+# mode = "normal"                    # normal | conservador | arriesgado
+
+# [paths]
+# export_dir = "~/Downloads"         # "" = no crear la carpeta de informe al cerrar
+# record_raw = true                  # false = no grabar los paquetes del juego

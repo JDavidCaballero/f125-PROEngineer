@@ -1,0 +1,497 @@
+{
+ "fecha": "2026-10-26",
+ "modelo": "qwen/qwen3.5-9b (LM Studio, red local)",
+ "prompt": "router v1 (antes de la calibración)",
+ "filas": [
+  {
+   "frase": "¿En qué sesión estamos?",
+   "esperado": "sesion",
+   "elegido": "sesion",
+   "ok": true,
+   "ruta_s": 4.94,
+   "total_s": 5.9,
+   "respuesta": "Estamos en carrera en Austria con tiempo despejado.",
+   "en_bruto": "Estamos en Carrera en Austria; tiempo: despejado."
+  },
+  {
+   "frase": "¿Quién va primero?",
+   "esperado": "piloto",
+   "elegido": "piloto",
+   "ok": true,
+   "ruta_s": 2.65,
+   "total_s": 4.28,
+   "respuesta": "Esposito va P1, está a 1.5 segundos delante de ti con Medio y 4 vueltas.",
+   "en_bruto": "Esposito va P1. Está a 1.5 s delante de ti. Lleva Medio con 4 vueltas."
+  },
+  {
+   "frase": "¿Cómo va el segundo clasificado?",
+   "esperado": "piloto",
+   "elegido": "piloto",
+   "ok": true,
+   "ruta_s": 2.72,
+   "total_s": 4.47,
+   "respuesta": "Costa va en P2, a 1.0 segundos delante de ti con neumáticos medios y 4 vueltas por delante.",
+   "en_bruto": "Costa va P2. Está a 1.0 s delante de ti. Lleva Medio con 4 vueltas."
+  },
+  {
+   "frase": "¿Quién es el tercer clasificado?",
+   "esperado": "piloto",
+   "elegido": "piloto",
+   "ok": true,
+   "ruta_s": 2.85,
+   "total_s": 4.56,
+   "respuesta": "Hansen va P3, a 0.5 segundos delante de ti, con neumáticos medios y cuatro vueltas por delante.",
+   "en_bruto": "Hansen va P3. Está a 0.5 s delante de ti. Lleva Medio con 4 vueltas."
+  },
+  {
+   "frase": "Información de Alves",
+   "esperado": "piloto",
+   "elegido": "piloto,piloto",
+   "ok": true,
+   "ruta_s": 3.64,
+   "total_s": 5.85,
+   "respuesta": "Costa va P2, a 1.0 s delante con Medio y 4 vueltas. Hansen va P3, a 0.5 s delante con Medio y 4 vueltas.",
+   "en_bruto": "Costa va P2. Está a 1.0 s delante de ti. Lleva Medio con 4 vueltas. Hansen va P3. Está a 0.5 s delante de ti. Lleva Medio con 4 vueltas."
+  },
+  {
+   "frase": "¿Dónde está Alves?",
+   "esperado": "piloto",
+   "elegido": "piloto,posicion",
+   "ok": true,
+   "ruta_s": 3.71,
+   "total_s": 5.55,
+   "respuesta": "Alves va en P6, a 1.8 segundos detrás de ti con neumáticos medios en la vuelta 5 de 15.",
+   "en_bruto": "Alves va P6. Está a 1.8 s detrás de ti. Lleva Medio con 3 vueltas. Vas P4 en la vuelta 5 de 15."
+  },
+  {
+   "frase": "¿Cuál es la mejor vuelta de la sesión?",
+   "esperado": "mejor_vuelta",
+   "elegido": "mejor_vuelta",
+   "ok": true,
+   "ruta_s": 2.82,
+   "total_s": 4.24,
+   "respuesta": "Tu vuelta es la mejor de la sesión con 1:15.811.",
+   "en_bruto": "La mejor vuelta de la sesión es de Tu: 1:15.811. Es la tuya."
+  },
+  {
+   "frase": "¿Cuál es mi mejor vuelta?",
+   "esperado": "mejor_vuelta",
+   "elegido": "mejor_vuelta",
+   "ok": true,
+   "ruta_s": 3.21,
+   "total_s": 4.66,
+   "respuesta": "Tu mejor vuelta es de 1:15.811. Es la tuya.",
+   "en_bruto": "La mejor vuelta de la sesión es de Tu: 1:15.811. Es la tuya."
+  },
+  {
+   "frase": "¿Qué tiempo hice?",
+   "esperado": "mejor_vuelta",
+   "elegido": "ritmo",
+   "ok": false,
+   "ruta_s": 1.69,
+   "total_s": 4.3,
+   "respuesta": "Tus últimas vueltas: 1:18.5, 1:15.8, 1:15.9; tu mejor 1:15.8. Ritmo reciente 1:15.9.",
+   "en_bruto": "Tus últimas vueltas: 1:18.5, 1:15.8, 1:15.9; tu mejor 1:15.8. Ritmo reciente 1:15.9."
+  },
+  {
+   "frase": "¿Hola, alguna actualización?",
+   "esperado": "actualizacion",
+   "elegido": "actualizacion",
+   "ok": true,
+   "ruta_s": 2.04,
+   "total_s": 4.43,
+   "respuesta": "Hola, vas P4 en la vuelta 5 de 15. Hansen va delante a 0.5 s, mientras que Fischer está detrás a 1.1 s.",
+   "en_bruto": "Vas P4 en la vuelta 5 de 15. Hansen va delante, a 0.5 s. En las últimas 2 vueltas has recortado 0.6 s. Su ritmo es 0.3 s peor que el tuyo. Fischer va detrás, a 1.1 s. En las últimas 2 vueltas te has alejado 0.9 s. Su ritmo es 1.2 s peor que el tuyo."
+  },
+  {
+   "frase": "¿Cómo vamos?",
+   "esperado": "actualizacion",
+   "elegido": "actualizacion,ritmo",
+   "ok": true,
+   "ruta_s": 3.67,
+   "total_s": 3.67,
+   "respuesta": "Vas P4 en la vuelta 5 de 15. Hansen va delante, a 0.5 s. En las últimas 2 vueltas has recortado 0.6 s. Su ritmo es 0.3 s peor que el tuyo. Fischer va detrás, a 1.1 s. En las últimas 2 vueltas te has alejado 0.9 s. Su ritmo es 1.2 s peor que el tuyo. Tus últimas vueltas: 1:18.5, 1:15.8, 1:15.9; tu mejor 1:15.8. Ritmo reciente 1:15.9.",
+   "en_bruto": "Vas P4 en la vuelta 5 de 15. Hansen va delante, a 0.5 s. En las últimas 2 vueltas has recortado 0.6 s. Su ritmo es 0.3 s peor que el tuyo. Fischer va detrás, a 1.1 s. En las últimas 2 vueltas te has alejado 0.9 s. Su ritmo es 1.2 s peor que el tuyo. Tus últimas vueltas: 1:18.5, 1:15.8, 1:15.9; tu mejor 1:15.8. Ritmo reciente 1:15.9."
+  },
+  {
+   "frase": "¿En qué posición voy?",
+   "esperado": "posicion",
+   "elegido": "posicion",
+   "ok": true,
+   "ruta_s": 2.85,
+   "total_s": 3.97,
+   "respuesta": "Vas en cuarta posición en la vuelta cinco de quince.",
+   "en_bruto": "Vas P4 en la vuelta 5 de 15."
+  },
+  {
+   "frase": "¿Quién está detrás de mí?",
+   "esperado": "hueco",
+   "elegido": "hueco",
+   "ok": true,
+   "ruta_s": 2.84,
+   "total_s": 5.06,
+   "respuesta": "Fischer está detrás a 1.1 segundos. En las últimas dos vueltas te has alejado 0.9 segundos, su ritmo es 1.2 segundos peor que el tuyo.",
+   "en_bruto": "Fischer va detrás, a 1.1 s. En las últimas 2 vueltas te has alejado 0.9 s. Su ritmo es 1.2 s peor que el tuyo."
+  },
+  {
+   "frase": "¿Cuánto le saco al de atrás?",
+   "esperado": "hueco",
+   "elegido": "hueco",
+   "ok": true,
+   "ruta_s": 2.77,
+   "total_s": 5.0,
+   "respuesta": "Fischer va detrás a 1.1 segundos. En las últimas dos vueltas te has alejado 0.9 segundos, con un ritmo 1.2 segundos peor que el tuyo.",
+   "en_bruto": "Fischer va detrás, a 1.1 s. En las últimas 2 vueltas te has alejado 0.9 s. Su ritmo es 1.2 s peor que el tuyo."
+  },
+  {
+   "frase": "¿Cómo voy contra Alves?",
+   "esperado": "hueco",
+   "elegido": "vs_rival",
+   "ok": false,
+   "ruta_s": 2.96,
+   "total_s": 6.24,
+   "respuesta": "Frente a Alves, en tus últimas 3 vueltas: sector 1: ganas 0.21 s, sector 2: ganas 0.28 s, sector 3: ganas 0.21 s. Solo tengo tiempos por sector, sin velocidad punta ni datos por curva de los rivales.",
+   "en_bruto": "Frente a Alves, en tus últimas 3 vueltas: sector 1: ganas 0.21 s, sector 2: ganas 0.28 s, sector 3: ganas 0.21 s. No tengo velocidad punta ni datos por curva de los rivales, solo tiempos por sector."
+  },
+  {
+   "frase": "¿Qué neumáticos tiene Alves?",
+   "esperado": "neumaticos",
+   "elegido": "neumaticos",
+   "ok": true,
+   "ruta_s": 2.97,
+   "total_s": 4.11,
+   "respuesta": "Alves sale con neumáticos Medio con tres vueltas de uso.",
+   "en_bruto": "Alves lleva Medio con 3 vueltas de uso."
+  },
+  {
+   "frase": "¿Cómo van mis gomas?",
+   "esperado": "neumaticos",
+   "elegido": "neumaticos",
+   "ok": true,
+   "ruta_s": 3.12,
+   "total_s": 4.35,
+   "respuesta": "Tanaka lleva Medio con 3 vueltas de uso. ¡Sigue así!",
+   "en_bruto": "Tanaka lleva Medio con 3 vueltas de uso."
+  },
+  {
+   "frase": "¿Qué llevan los otros coches?",
+   "esperado": "neumaticos",
+   "elegido": "neumaticos",
+   "ok": true,
+   "ruta_s": 3.09,
+   "total_s": 6.4,
+   "respuesta": "Los otros coches llevan neumático Blando con 3 vueltas de uso y un desgaste máximo del 14% en el trasero izquierdo. Al ritmo actual llegarán al 70% en unas 15 vueltas, quedando 11, con un juego estimado de 18 vueltas de vida.",
+   "en_bruto": "Neumático Blando, 3 vueltas de uso, desgaste máximo 14% en el trasero izquierdo. Al ritmo actual llegan al 70% en unas 15 vueltas y quedan 11. El juego estima 18 vueltas de vida."
+  },
+  {
+   "frase": "¿Cuánto combustible me queda?",
+   "esperado": "combustible",
+   "elegido": "combustible",
+   "ok": true,
+   "ruta_s": 3.2,
+   "total_s": 4.48,
+   "respuesta": "Combustible 15.6 kg, margen de -0.6 vueltas.",
+   "en_bruto": "Combustible 15.6 kg, margen de -0.6 vueltas."
+  },
+  {
+   "frase": "¿Cuánta batería tengo?",
+   "esperado": "ers",
+   "elegido": "ers",
+   "ok": true,
+   "ruta_s": 3.47,
+   "total_s": 4.43,
+   "respuesta": "Batería al 18%.",
+   "en_bruto": "ERS al 18%."
+  },
+  {
+   "frase": "¿Cómo he usado el ERS en la última vuelta?",
+   "esperado": "ers_vuelta",
+   "elegido": "ers_vuelta",
+   "ok": true,
+   "ruta_s": 2.89,
+   "total_s": 5.24,
+   "respuesta": "No puedo analizar tu uso del ERS porque aún no tengo una vuelta completa cronometrada y válida. Necesito que vuelvas a pasar por la salida con el programa escuchando para que pueda revisarlo.",
+   "en_bruto": "Aún no tengo una vuelta completa tuya medida: necesito una vuelta cronometrada y válida con el programa escuchando desde la salida."
+  },
+  {
+   "frase": "¿Tengo daños?",
+   "esperado": "danos",
+   "elegido": "danos,ers",
+   "ok": true,
+   "ruta_s": 2.1,
+   "total_s": 3.15,
+   "respuesta": "Sin daños. ERS al 18%.",
+   "en_bruto": "Sin daños relevantes. ERS al 18%."
+  },
+  {
+   "frase": "¿Va a llover?",
+   "esperado": "clima",
+   "elegido": "clima",
+   "ok": true,
+   "ruta_s": 1.7,
+   "total_s": 3.18,
+   "respuesta": "Pista ahora seca, con solo un 3% de probabilidad de lluvia en los próximos 15 minutos.",
+   "en_bruto": "Ahora despejado; probabilidad de lluvia en los próximos 15 min: 3%."
+  },
+  {
+   "frase": "¿Cuántas vueltas faltan?",
+   "esperado": "vueltas",
+   "elegido": "vueltas",
+   "ok": true,
+   "ruta_s": 3.14,
+   "total_s": 4.15,
+   "respuesta": "Pilotos, quedan 11 vueltas.",
+   "en_bruto": "Quedan 11 vueltas."
+  },
+  {
+   "frase": "¿Dónde pierdo tiempo?",
+   "esperado": "analisis_vuelta",
+   "elegido": "analisis_vuelta",
+   "ok": true,
+   "ruta_s": 2.77,
+   "total_s": 4.42,
+   "respuesta": "No tengo tu vuelta completa medida, necesito una vuelta cronometrada y válida con el programa escuchando desde la salida.",
+   "en_bruto": "Aún no tengo una vuelta completa tuya medida: necesito una vuelta cronometrada y válida con el programa escuchando desde la salida."
+  },
+  {
+   "frase": "¿Dónde puedo mejorar en mi vuelta?",
+   "esperado": "analisis_vuelta",
+   "elegido": "analisis_vuelta",
+   "ok": true,
+   "ruta_s": 3.22,
+   "total_s": 5.22,
+   "respuesta": "Necesito una vuelta cronometrada y válida con el programa escuchando desde la salida para poder decirte dónde mejorar. Aún no tengo tus tiempos para analizar tu vuelta.",
+   "en_bruto": "Aún no tengo una vuelta completa tuya medida: necesito una vuelta cronometrada y válida con el programa escuchando desde la salida."
+  },
+  {
+   "frase": "Compárame con el primero",
+   "esperado": "comparar",
+   "elegido": "comparar",
+   "ok": true,
+   "ruta_s": 1.95,
+   "total_s": 3.99,
+   "respuesta": "No puedo compararte con el primero porque aún no tengo una vuelta completa medida. Necesito una vuelta cronometrada y válida con el programa escuchando desde la salida.",
+   "en_bruto": "Aún no tengo una vuelta completa tuya medida: necesito una vuelta cronometrada y válida con el programa escuchando desde la salida."
+  },
+  {
+   "frase": "Compárame con mi compañero",
+   "esperado": "comparar",
+   "elegido": "comparar",
+   "ok": true,
+   "ruta_s": 2.88,
+   "total_s": 4.88,
+   "respuesta": "No puedo compararte con tu compañero porque aún no tengo una vuelta completa cronometrada y válida. Necesito que me escuches desde la salida para poder medir el tiempo.",
+   "en_bruto": "Aún no tengo una vuelta completa tuya medida: necesito una vuelta cronometrada y válida con el programa escuchando desde la salida."
+  },
+  {
+   "frase": "¿Cómo va mi compañero?",
+   "esperado": "companero",
+   "elegido": "companero",
+   "ok": true,
+   "ruta_s": 2.86,
+   "total_s": 5.12,
+   "respuesta": "Jansen va noveno, a 3.4 segundos detrás con neumáticos blandos a tres vueltas. Su ritmo actual es 0.8 segundos más lento que el tuyo.",
+   "en_bruto": "Tu compañero Jansen va P9, a 3.4 s detrás de ti. Lleva Blando con 3 vueltas y 17% de desgaste; paradas: 0. Su ritmo reciente es 0.8 s peor que el tuyo."
+  },
+  {
+   "frase": "¿Qué estimas para la carrera?",
+   "esperado": "estimacion",
+   "elegido": "estimacion",
+   "ok": true,
+   "ruta_s": 2.8,
+   "total_s": 6.12,
+   "respuesta": "Tu mejor vuelta es 1:15.811, lo que da una P1 de 22 con ese tiempo. Aún no tienes una tanda de 4 vueltas limpias para estimar el ritmo de carrera, ya que en entrenos desconozco el combustible y el modo motor de los demás.",
+   "en_bruto": "Tu mejor vuelta es 1:15.811: P1 de 22 con tiempo. Aún no tienes una tanda de 4 vueltas limpias seguidas para estimar el ritmo de carrera. Es una estimación: en entrenos no conozco el combustible ni el modo motor de los demás."
+  },
+  {
+   "frase": "¿Tienes posibles estrategias?",
+   "esperado": "estrategia",
+   "elegido": "estrategia",
+   "ok": true,
+   "ruta_s": 2.96,
+   "total_s": 3.08,
+   "respuesta": "Recomiendo: Entra a boxes en la vuelta 12, Medio. Es obligatorio usar otro compuesto (regla de dos compuestos). Parar en la vuelta 12 cuesta unos 22 s. Esperado P3.2. ¿Lo hacemos? Alternativa: parar en la vuelta 10 a medio (P3.5).",
+   "en_bruto": "Recomiendo: Entra a boxes en la vuelta 12, Medio. Es obligatorio usar otro compuesto (regla de dos compuestos). Parar en la vuelta 12 cuesta unos 22 s. Esperado P3.2. ¿Lo hacemos? Alternativa: parar en la vuelta 10 a medio (P3.5)."
+  },
+  {
+   "frase": "No sé qué hacer",
+   "esperado": "estrategia",
+   "elegido": "estrategia,estimacion",
+   "ok": true,
+   "ruta_s": 2.07,
+   "total_s": 2.19,
+   "respuesta": "Recomiendo: Entra a boxes en la vuelta 12, Medio. Es obligatorio usar otro compuesto (regla de dos compuestos). Parar en la vuelta 12 cuesta unos 22 s. Esperado P3.2. ¿Lo hacemos? Alternativa: parar en la vuelta 10 a medio (P3.5). Tu mejor vuelta es 1:15.811: P1 de 22 con tiempo. Aún no tienes una tanda de 4 vueltas limpias seguidas para estimar el ritmo de carrera. Es una estimación: en entrenos no conozco el combustible ni el modo motor de los demás.",
+   "en_bruto": "Recomiendo: Entra a boxes en la vuelta 12, Medio. Es obligatorio usar otro compuesto (regla de dos compuestos). Parar en la vuelta 12 cuesta unos 22 s. Esperado P3.2. ¿Lo hacemos? Alternativa: parar en la vuelta 10 a medio (P3.5). Tu mejor vuelta es 1:15.811: P1 de 22 con tiempo. Aún no tienes una tanda de 4 vueltas limpias seguidas para estimar el ritmo de carrera. Es una estimación: en entrenos no conozco el combustible ni el modo motor de los demás."
+  },
+  {
+   "frase": "¿Es mejor el medio o el duro?",
+   "esperado": "compuesto",
+   "elegido": "compuesto",
+   "ok": true,
+   "ruta_s": 3.3,
+   "total_s": 3.41,
+   "respuesta": "Mejor opción: Medio, parando en la vuelta 12 (P3.2 esperado). Con Medio, Costa rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.4% por vuelta); Hansen rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.1% por vuelta); Esposito rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.4% por vuelta). Es obligatorio usar otro compuesto (regla de dos compuestos). Parar en la vuelta 12 cuesta unos 22 s. ¿Lo hacemos?",
+   "en_bruto": "Mejor opción: Medio, parando en la vuelta 12 (P3.2 esperado). Con Medio, Costa rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.4% por vuelta); Hansen rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.1% por vuelta); Esposito rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.4% por vuelta). Es obligatorio usar otro compuesto (regla de dos compuestos). Parar en la vuelta 12 cuesta unos 22 s. ¿Lo hacemos?"
+  },
+  {
+   "frase": "¿Qué tal el neumático medio?",
+   "esperado": "compuesto",
+   "elegido": "neumaticos",
+   "ok": false,
+   "ruta_s": 2.2,
+   "total_s": 3.24,
+   "respuesta": "Alves lleva Medio con 3 vueltas de uso.",
+   "en_bruto": "Alves lleva Medio con 3 vueltas de uso."
+  },
+  {
+   "frase": "¿Qué neumático pongo en la próxima parada?",
+   "esperado": "compuesto",
+   "elegido": "compuesto",
+   "ok": true,
+   "ruta_s": 3.42,
+   "total_s": 3.54,
+   "respuesta": "Mejor opción: Medio, parando en la vuelta 12 (P3.2 esperado). Con Medio, Costa rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.4% por vuelta); Hansen rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.1% por vuelta); Esposito rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.4% por vuelta). Es obligatorio usar otro compuesto (regla de dos compuestos). Parar en la vuelta 12 cuesta unos 22 s. ¿Lo hacemos?",
+   "en_bruto": "Mejor opción: Medio, parando en la vuelta 12 (P3.2 esperado). Con Medio, Costa rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.4% por vuelta); Hansen rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.1% por vuelta); Esposito rueda 0.3 s más lento que tu ritmo actual con Blando (2 vueltas limpias, desgasta 2.4% por vuelta). Es obligatorio usar otro compuesto (regla de dos compuestos). Parar en la vuelta 12 cuesta unos 22 s. ¿Lo hacemos?"
+  },
+  {
+   "frase": "¿Puedo hacer un undercut?",
+   "esperado": "undercut",
+   "elegido": "undercut",
+   "ok": true,
+   "ruta_s": 2.82,
+   "total_s": 2.94,
+   "respuesta": "Parar ahora a Medio: esperado P4.4. Es obligatorio usar otro compuesto (regla de dos compuestos). Parar esta vuelta cuesta unos 22 s. Con Medio nuevos pierdes ~0.5 s por vuelta frente a tus gomas actuales. Aun así, la mejor opción es: parar en la vuelta 12 a medio (P3.2). ¿Lo hacemos?",
+   "en_bruto": "Parar ahora a Medio: esperado P4.4. Es obligatorio usar otro compuesto (regla de dos compuestos). Parar esta vuelta cuesta unos 22 s. Con Medio nuevos pierdes ~0.5 s por vuelta frente a tus gomas actuales. Aun así, la mejor opción es: parar en la vuelta 12 a medio (P3.2). ¿Lo hacemos?"
+  },
+  {
+   "frase": "¿Y si alargo la parada?",
+   "esperado": "overcut",
+   "elegido": "overcut",
+   "ok": true,
+   "ruta_s": 3.38,
+   "total_s": 3.5,
+   "respuesta": "Alternativa arriesgada: alargar y parar en la vuelta 7 a Medio (overcut a Alves): la probabilidad de acabar por delante de Alves pasa de 71% a 84%, y cuesta 0.0 puntos esperados (P3.9 frente a P4.4). ¿Lo hacemos?",
+   "en_bruto": "Alternativa arriesgada: alargar y parar en la vuelta 7 a Medio (overcut a Alves): la probabilidad de acabar por delante de Alves pasa de 71% a 84%, y cuesta 0.0 puntos esperados (P3.9 frente a P4.4). ¿Lo hacemos?"
+  },
+  {
+   "frase": "Quiero acabar quinto",
+   "esperado": "objetivo",
+   "elegido": "objetivo",
+   "ok": true,
+   "ruta_s": 3.82,
+   "total_s": 3.82,
+   "respuesta": "¿Quieres que fije ese objetivo? Di sí o no.",
+   "en_bruto": "¿Quieres que fije ese objetivo? Di sí o no."
+  },
+  {
+   "frase": "¿Podemos ganar la carrera?",
+   "esperado": "viabilidad",
+   "elegido": "viabilidad",
+   "ok": true,
+   "ruta_s": 2.76,
+   "total_s": 2.88,
+   "respuesta": "Con la estrategia recomendada, la probabilidad de ganar es 11%. Rango probable de llegada: P1 a P4.",
+   "en_bruto": "Con la estrategia recomendada, la probabilidad de ganar es 11%. Rango probable de llegada: P1 a P4."
+  },
+  {
+   "frase": "Menos avisos de combustible",
+   "esperado": "avisos",
+   "elegido": "avisos",
+   "ok": true,
+   "ruta_s": 2.07,
+   "total_s": 2.07,
+   "respuesta": "Vale: no te daré avisos de combustible. Solo los críticos al final de la carrera.",
+   "en_bruto": "Vale: no te daré avisos de combustible. Solo los críticos al final de la carrera."
+  },
+  {
+   "frase": "Más actualizaciones del ERS",
+   "esperado": "avisos",
+   "elegido": "actualizacion,ers",
+   "ok": false,
+   "ruta_s": 3.05,
+   "total_s": 7.39,
+   "respuesta": "Vas P4 en la vuelta 5 de 15, con Hansen a 0.5 s delante y Fischer a 1.1 s detrás. Has recortado 0.6 s en las últimas 2 vueltas, mientras que su ritmo es 0.3 s peor que el tuyo y te has alejado 0.9 s de Fischer en el mismo periodo, con el ERS al 18%.",
+   "en_bruto": "Vas P4 en la vuelta 5 de 15. Hansen va delante, a 0.5 s. En las últimas 2 vueltas has recortado 0.6 s. Su ritmo es 0.3 s peor que el tuyo. Fischer va detrás, a 1.1 s. En las últimas 2 vueltas te has alejado 0.9 s. Su ritmo es 1.2 s peor que el tuyo. ERS al 18%."
+  },
+  {
+   "frase": "No me siento cómodo con las gomas",
+   "esperado": "gomas_mal",
+   "elegido": "avisos",
+   "ok": false,
+   "ruta_s": 3.73,
+   "total_s": 3.73,
+   "respuesta": "¿Quieres que cambie los avisos? Di sí o no.",
+   "en_bruto": "¿Quieres que cambie los avisos? Di sí o no."
+  },
+  {
+   "frase": "Cállate un rato",
+   "esperado": "silencio",
+   "elegido": "-",
+   "ok": false,
+   "ruta_s": 0.0,
+   "total_s": 0.0,
+   "respuesta": "Silencio. Solo te avisaré de lo crítico. Di 'reanuda' para volver.",
+   "en_bruto": "Silencio. Solo te avisaré de lo crítico. Di 'reanuda' para volver."
+  },
+  {
+   "frase": "Mándame ánimos para la clasificación",
+   "esperado": "",
+   "elegido": "charla",
+   "ok": true,
+   "ruta_s": 2.25,
+   "total_s": 2.25,
+   "respuesta": "Vamos, tú puedes con esta vuelta.",
+   "en_bruto": "Vamos, tú puedes con esta vuelta."
+  },
+  {
+   "frase": "Hola, ¿me escuchas?",
+   "esperado": "",
+   "elegido": "charla",
+   "ok": true,
+   "ruta_s": 1.98,
+   "total_s": 1.98,
+   "respuesta": "Te escucho, piloto. ¿En qué puedo ayudarte ahora?",
+   "en_bruto": "Te escucho, piloto. ¿En qué puedo ayudarte ahora?"
+  },
+  {
+   "frase": "Empiezo vuelta lanzada con el blando",
+   "esperado": "",
+   "elegido": "neumaticos,analisis_vuelta",
+   "ok": false,
+   "ruta_s": 47.5,
+   "total_s": 49.63,
+   "respuesta": "Alves lleva Medio con 3 vueltas de uso. Necesito una vuelta cronometrada y válida con el programa escuchando desde la salida.",
+   "en_bruto": "Alves lleva Medio con 3 vueltas de uso. Aún no tengo una vuelta completa tuya medida: necesito una vuelta cronometrada y válida con el programa escuchando desde la salida."
+  },
+  {
+   "frase": "Entro a boxes",
+   "esperado": "",
+   "elegido": "charla",
+   "ok": true,
+   "ruta_s": 1.63,
+   "total_s": 1.63,
+   "respuesta": "Entendido.",
+   "en_bruto": "Entendido."
+  },
+  {
+   "frase": "¿Quién ganó el mundial de 1994?",
+   "esperado": "",
+   "elegido": "-",
+   "ok": true,
+   "ruta_s": 1.54,
+   "total_s": 1.54,
+   "respuesta": "No he entendido. ¿Puedes repetirlo?",
+   "en_bruto": "No he entendido. ¿Puedes repetirlo?"
+  },
+  {
+   "frase": "Gracias, buen trabajo",
+   "esperado": "",
+   "elegido": "charla",
+   "ok": true,
+   "ruta_s": 2.05,
+   "total_s": 2.05,
+   "respuesta": "¡Gracias! A por esa vuelta cronometrada.",
+   "en_bruto": "¡Gracias! A por esa vuelta cronometrada."
+  }
+ ]
+}

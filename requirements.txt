@@ -1,0 +1,1 @@
+# Solo librería estándar (Python 3.11+: usa tomllib). Nada que instalar.

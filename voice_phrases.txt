@@ -1,0 +1,61 @@
+# Frases de prueba de voz. Formato:  frase | intención esperada | {P} si la frase nombra a un piloto
+# {P} se sustituye por un piloto de la parrilla de la carrera que reproduces: léelo tal como aparece en pantalla.
+# Prueba con ritmo normal, como hablarías conduciendo. Algunas son deliberadamente informales o incompletas.
+
+# --- respuestas a una propuesta
+sí | si
+sí, hazlo | si
+dale | si
+vale | si
+no | no
+no, gracias | no
+negativo | no
+descártalo | no
+explícame | explica
+¿por qué? | explica
+repite | repite
+silencio | silencio
+reanuda | reanuda
+
+# --- consultas
+¿Cómo voy de posición? | posicion
+¿En qué puesto voy? | posicion
+¿Cuántas vueltas quedan? | vueltas
+¿Cómo van las gomas? | neumaticos
+¿Cuánto aguantan los neumáticos? | neumaticos
+¿Cuánto combustible tengo? | combustible
+¿Cómo voy de gasolina? | combustible
+¿Dónde puedo ahorrar combustible? | ahorro
+¿Cuánta batería me queda? | ers
+¿Cómo voy de ritmo? | ritmo
+¿Qué hueco hay con el de delante? | hueco_delante
+¿Y el de atrás? | hueco_detras
+¿Cómo voy contra {P}? | hueco | {P}
+¿A cuánto está {P}? | hueco | {P}
+¿Tengo daños? | danos
+¿Va a llover? | clima
+¿Por qué estoy perdiendo tiempo? | por_que_pierdo
+
+# --- estrategia
+¿Cambiamos de estrategia? | estrategia
+¿Qué hacemos? | estrategia
+No sé qué hacer | estrategia
+¿Cuál es el plan? | estrategia
+¿Puedo hacer undercut? | undercut
+¿Me conviene parar? | undercut
+Quiero parar ya | parar_ya
+Entro a boxes ahora | parar_ya
+
+# --- sensaciones
+No me siento cómodo con las gomas | gomas_mal
+No tengo agarre | gomas_mal
+Las gomas están muertas | gomas_mal
+No me siento cómodo | incomodo
+
+# --- objetivos
+Quiero acabar quinto | objetivo_pos
+Quiero terminar en la posición tres | objetivo_pos
+Necesito pasar a {P} | objetivo_pasar | {P}
+Tengo que pasar a {P} | objetivo_pasar | {P}
+¿Vamos bien con el objetivo? | objetivo_estado
+Olvida el objetivo | objetivo_borrar

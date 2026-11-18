@@ -1,0 +1,18 @@
+# Frases compuestas o hipotéticas (11 nov 2026): miden si razonar ayuda a elegir la herramienta.
+# formato: frase | herramienta esperada (a/b = cualquiera vale; vacío = charla o sin dato, nunca una acción)
+si paro ahora y {P} alarga, ¿salgo delante? | parar_ya/undercut/que_pasa_si
+¿me conviene parar antes que el de delante para pasarlo? | undercut
+¿y si alargo cinco vueltas más? | overcut/que_pasa_si
+¿cuánto le saco al de atrás y cómo van sus gomas? | hueco/neumaticos
+voy séptimo, ¿podemos llegar al podio si arriesgamos? | viabilidad/objetivo
+¿qué hago para adelantar a {P} si tiene neumáticos más nuevos? | como_adelantar
+tengo el alerón tocado, ¿merece la pena entrar? | danos/parar_ya/estrategia/que_pasa_si/estado_coche
+¿llego al final con estas gomas o tengo que parar? | neumaticos/estrategia
+el de delante va más lento que yo pero no lo paso, ¿qué hacemos? | como_adelantar/undercut
+si sale el safety car, ¿paro? | estrategia
+¿cuánto pierdo si paro ahora en vez de esperar? | parar_ya/estrategia/que_pasa_si
+quiero acabar quinto, ¿qué tengo que hacer? | objetivo/viabilidad
+¿me alcanza la gasolina si ataco hasta el final? | combustible
+¿soy más rápido que {P} con estas gomas? | comparar/vs_rival/ritmo_rival
+no sé si parar ya o aguantar, tú qué dices | estrategia/parar_ya
+¿y si pongo duros en vez de medios? | compuesto/que_pasa_si

@@ -1,0 +1,124 @@
+# Configuración del ingeniero. Todo lo que cambia entre máquinas o entre gustos vive aquí.
+# Los valores marcados (estimado) son suposiciones razonables, no datos del juego: ajústalos con tus carreras
+# (o corre `python3 learn.py captures/*.f1raw` para que se calibren solos).
+
+[network]
+host = "0.0.0.0"
+port = 20777
+
+[engineer]
+mode = "normal"          # normal | conservador | arriesgado
+game_year = 2025         # 2025: DRS + modo ERS "adelantamiento". 2026: ver README (formato UDP sin verificar)
+lap_summary = true       # resumen de radio al terminar cada vuelta
+min_gap_between_strategy_s = 8
+budget_prio2 = 4          # avisos de prioridad 2 por vuelta como máximo (0 = sin límite); los críticos y tus preguntas no cuentan
+budget_prio3 = 2          # avisos de prioridad 3 por vuelta como máximo
+
+[ers]
+deploy_limit_mj = 4.0     # despliegue máximo del MGU-K por vuelta (el contorno verde del indicador de ERS); medido: tus vueltas nunca pasan de 4.0
+
+[llm]
+enabled = true                      # el LLM es el cerebro por defecto; si el servidor no responde, el programa sigue con reglas
+primary = true                      # el LLM entiende la frase y elige las herramientas (brain.py); false = solo clasifica cuando las reglas fallan
+compose = true                      # el LLM redacta las respuestas informativas (validando cifras y nombres)
+down_cooldown_s = 30                # tras un fallo del servidor no se vuelve a intentar durante estos segundos
+url = "http://127.0.0.1:1234/v1"   # servidor de LM Studio (en el Mac: http://localhost:1234/v1)
+model = "qwen/qwen3.5-9b"          # el probado; puedes usar cualquier otro (ver docs/CONFIGURACION.md, sin editar este archivo)
+temperature = 0.2
+timeout_s = 12
+ack_after_s = 4.0    # (2.5 s salía en 15 de 28 frases: el enrutado tarda ~3 s) si la respuesta tarda más que esto, el ingeniero dice «Recibido, lo miro» y sigue pensando (0 = nunca)
+max_tokens = 200
+send_enable_thinking_false = false   # solo si tu servidor sigue "pensando" por la API
+reasoning_effort = "none"            # se manda en cada petición: "none" = sin razonar aunque LM Studio tenga Think ("auto" = no mandarlo)
+# router_plan = false                # experimento: el modelo escribe un plan corto antes de elegir herramientas
+# router_reasoning = "low"           # experimento: razonamiento nativo solo para elegir herramientas (más lento)
+# router_max_tokens = 120
+
+[thresholds]
+wear_plan = 55           # % desgaste de la peor rueda: "planea la parada"
+wear_critical = 70       # % : "entra a boxes"
+wear_finish_max = 85     # % : a 3 vueltas o menos del final, si acabas por debajo de esto no se dice "entra a boxes" (estimado)
+damage_light = 20
+damage_severe = 50
+damage_critical = 60     # % en un alerón: daño que justifica proponer parar ya (estimado)
+damage_loss_s = 0.5      # s/vuelta perdidos, MEDIDOS tras el golpe, que justifican proponer parar ya
+component_warn = 50      # desgaste de MGU-H/K, ES, CE, ICE, TC
+component_severe = 80
+engine_temp_hot = 135    # °C (estimado; en tu captura el máximo fue 120)
+brake_temp_hot = 1150    # °C (estimado; en tu captura de Singapur el máximo fue 1117)
+tyre_surface_hot = 135   # °C (estimado; máximo visto 125)
+tyre_inner_hot = 115     # °C (estimado; máximo visto 92)
+ers_low_pct = 10
+fuel_alert_laps = 4       # el combustible solo se avisa en las últimas N vueltas...
+fuel_alert_deficit = 0.2  # ...y si faltan más de estas vueltas de combustible
+drs_range_s = 1.0
+attack_range_s = 1.5
+sector_loss_s = 0.3
+pit_limiter_margin_kmh = 3
+front_wing_pit_pct = 20  # daño de alerón delantero a partir del cual se evalúa parar a repararlo
+
+[strategy]
+wear_limit = 70.0              # % en que la peor rueda deja de ser utilizable
+cliff_wear = 55.0              # % desde el cual el ritmo cae más rápido (estimado)
+cliff_k = 0.006                # s por (%^2) pasado el límite anterior (estimado)
+pace_loss_per_wear = 0.025     # s/vuelta por cada 1% de desgaste (tu captura: ~0.027; se re-mide en vivo)
+pit_loss_s = 22.0              # pérdida de una parada con bandera verde (estimado; learn.py lo mide por pista)
+pit_loss_sc = 0.5              # fracción de la pérdida si hay Safety Car (estimado)
+pit_loss_vsc = 0.6             # fracción con VSC (estimado)
+lap_noise_s = 0.25
+form_noise_s = 0.12
+pass_adv_s = 0.6               # ventaja de ritmo por vuelta para poder adelantar
+clamp_gap_s = 0.5
+sc_gap_s = 1.0
+sc_prob_lap = [0.0, 0.01, 0.02, 0.035]   # por vuelta, según el ajuste de Safety Car del juego (estimado)
+ai_pit_wear = 60.0             # % a partir del cual la IA suele parar (estimado)
+ai_sc_pit_prob = 0.8            # prob. de que un rival con la parada cerca (≤10 vueltas) pare con SC (estimado)
+min_stop_laps = 3              # con menos vueltas que esto no se planea parada
+two_compound_rule = "auto"     # auto | true | false  ("auto": se asume desde 12 vueltas; ajústalo a tu partida)
+use_game_life = true           # tomar también la vida útil que reporta el juego (el menor de ambos límites)
+aero_loss_per_pct = 0.015      # s/vuelta por cada 1% de daño en alerón delantero (estimado)
+tyre_damage_loss_per_pct = 0.01   # s/vuelta por cada 1% de daño en un neumático (estimado)
+felt_grip_loss_s = 0.3         # s/vuelta que se asumen perdidos cuando dices que no tienes agarre (estimado)
+seed = 7
+
+[priors]
+# Ritmo de desgaste por vuelta (peor rueda, en %) usado solo hasta medir 2 vueltas (estimado, Blando medido ~2.4 en Singapur)
+wear_rate_soft = 2.6
+usable_life_soft = 22
+# Diferencia de ritmo entre compuestos nuevos, en s/vuelta respecto al Blando (medida en tu captura de Singapur)
+off_medium = 0.84
+off_hard = 1.68
+off_inter = 6.1
+off_wet = 8.5
+
+[dialog]
+# Cuándo el ingeniero te propone algo sin que lo pidas (filtro de silencio)
+# min_gain_pts = 0.7          # opcional: fija la mejora mínima (puntos esperados) para TODOS los modos. Por defecto:
+#                              conservador 1.0, normal 0.7, arriesgado 0.4
+persistence = 2               # evaluaciones seguidas con el mismo plan antes de proponerlo (salvo urgencia)
+min_lap = 3                   # validador: nada de estrategia antes de esta vuelta (salvo urgencia)...
+min_lap_frac = 0.08           # ...ni antes de esta fracción de la carrera (gana la mayor)
+horizon_laps = 6              # validador: solo se propone una parada que llegue en las próximas N vueltas
+min_clean_laps = 3            # validador: vueltas limpias tuyas necesarias (datos mínimos)
+min_rivals_with_pace = 5      # validador: rivales con ritmo medido necesarios (o todos si hay menos)
+proposal_cooldown_laps = 3    # vueltas mínimas entre propuestas
+decline_laps = 3              # vueltas sin repetir un plan que rechazaste (salvo que mejore al doble o sea urgente)
+change_mult = 1.5             # para cambiar un plan ya aceptado hace falta 1.5 veces esa mejora
+plan_change_min_pos = 1.0     # si sigues un plan (previo o aceptado), una alternativa debe ganar ≥ 1 posición esperada (salvo algo grave)
+plan_change_hold_laps = 5     # tras un cambio de plan, vueltas sin proponer otro (salvo SC, daño, clima o sanción)
+goal_ok_p = 0.55              # objetivo "en camino" si la probabilidad de cumplirlo es >= 55%
+goal_risk_p = 0.20            # "en riesgo" entre 20% y 55%; por debajo, "inalcanzable"
+goal_persistence = 2          # evaluaciones seguidas para cambiar el estado de un objetivo
+pass_margin_s = 0.5           # margen (s) por delante del rival para dar por buen un adelantamiento
+
+[paths]
+profile = "data/profile.json"
+memory = "data/memory.json"   # lo medido en entrenos/clasificación por circuito (solo con el juego en vivo; "" = no guardar)
+runs = "runs"
+export_dir = "~/Downloads"   # al cerrar, deja INFORME.txt + udp.f1raw.gz juntos en ~/Downloads/f1-informe-<sesión> ("" = no exportar)
+learn_at_end = true       # al cerrar, aprende de la grabación (perfil por circuito: parada y desgaste)
+open_folder_at_end = true  # y abre esa carpeta (Finder / Explorador de Windows / xdg-open en Linux)
+record_raw = true          # en `lab --live` guarda todos los paquetes del juego en runs/session-*/udp.f1raw (reproducible; ~100 MB por hora)
+
+[voice]
+tts = "auto"               # voz del ingeniero: auto (Mac say, Windows SAPI, Linux espeak-ng/spd-say) | say | sapi | espeak | spd | none
