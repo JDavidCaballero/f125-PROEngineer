@@ -72,7 +72,10 @@ class VoiceSession:
 
     # ------------------------------------------------------------------ lo que dice el ingeniero
     def _on_engine_say(self, text, prio):
-        self.speaker.say(text, prio)
+        if prio >= 2 and getattr(self.eng, "say_forced", False):
+            self.speaker.say(text, prio, expires=False)               # una propuesta o una respuesta nunca caduca (si no, se daría por oída sin serlo)
+        else:
+            self.speaker.say(text, prio)
         self.log({"type": "engine_say", "text": text, "prio": prio})
         self._track_proposal()
 
@@ -351,7 +354,8 @@ def make_speaker(args, cfg, which=None, platform=None, popen=subprocess.Popen, r
         if not args.no_voice:
             print(f"Aviso: {tts.hint}")
         return Speaker(backend=tts, popen=popen, enabled=False)
-    return Speaker(voice=args.voice or tts.find_voice(run), enabled=not args.no_voice, backend=tts, popen=popen, run=run)
+    return Speaker(voice=args.voice or tts.find_voice(run), enabled=not args.no_voice, backend=tts, popen=popen, run=run,
+                   max_age_s=(cfg.get("voice", {}) or {}).get("max_age_s", 8.0))
 
 
 def build_session(args, cfg, stamp, eng=None):
@@ -970,7 +974,7 @@ def export_for_sharing(folder, report, cfg):
             with open(raw, "rb") as src, gzip.open(gz, "wb", compresslevel=6) as dst:
                 shutil.copyfileobj(src, dst)
             msg += f"\n  {gz} ({gz.stat().st_size / 1e6:.0f} MB; se reproduce igual con `lab --file`)"
-        print(f"Carpeta lista para compartir (informe + paquetes del juego):\n{msg}")
+        print(f"Carpeta lista para enviarme (informe + paquetes del juego):\n{msg}")
         if (cfg.get("paths", {}) or {}).get("open_folder_at_end", True):
             open_folder(out)
         return out
@@ -1035,7 +1039,7 @@ def main():
     finally:
         bb.stop()
         path = pack_folder(a.folder)
-        print(f"\nTodo quedó registrado. Adjunta este archivo a un issue (texto, sin audio): {path}")
+        print(f"\nTodo quedó registrado. Envíame este archivo (texto, sin audio): {path}")
         if a.cmd == "lab" and a.live:                                  # solo la sesión en vivo graba paquetes; las demás órdenes no exportan nada
             learn_from_recording(a.folder, cfg)
             export_for_sharing(a.folder, path, cfg)

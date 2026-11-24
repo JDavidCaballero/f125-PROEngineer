@@ -20,7 +20,7 @@ import llm as L
 
 # Herramientas visibles para el modelo: nombre -> (intención interna, descripción de argumentos). Solo lo que el código sabe hacer.
 TOOLS = {
-    "posicion": "", "hueco": "driver | dir=delante|detras", "piloto": "driver | pos=N (quién va PN)", "companero": "",
+    "posicion": "", "hueco": "driver | dir=delante|detras | con=lider (distancia al primero)", "piloto": "driver | pos=N (quién va PN)", "companero": "",
     "neumaticos": "driver | dir=delante|detras | otros=true; sin args=los míos; también vida restante («cuántas vueltas aguanta»)", "combustible": "", "ers": "batería ahora",
     "ers_vuelta": "uso del ERS en mi vuelta", "danos": "", "clima": "ahora y pronóstico: cuándo llueve, cuándo para, la próxima sesión", "vueltas": "las que quedan", "ritmo": "mis tiempos",
     "mejor_vuelta": "driver | sesion=true", "analisis_vuelta": "dónde pierdo tiempo", "comparar": "driver | con=primero|companero|delante",
@@ -41,6 +41,9 @@ TOOLS = {
 }
 # herramientas que cambian el estado: con frases largas o varias herramientas a la vez, primero se pregunta
 RISKY = {"silencio", "objetivo", "gomas_mal", "avisos", "parar_ya"}
+# solo estas acciones (cambian estado o fijan datos) exigen respaldo en las palabras del piloto; las LECTURAS (clima, ers, danos,
+# combustible, que_pasa_si...) se fían de la elección del modelo si [llm] trust_reads = true (por defecto false: 5 pruebas fijan errores medidos de Qwen que SUPPORT frena)
+ACT_SUPPORT = RISKY | {"plan_carrera"}
 # solo estas se reescriben (las propuestas conservan su texto exacto: llevan «¿Lo hacemos?»)
 COMPOSE_OK = {"posicion", "hueco", "piloto", "companero", "neumaticos", "combustible", "ers", "ers_vuelta", "danos", "clima",
               "vueltas", "ritmo", "mejor_vuelta", "analisis_vuelta", "comparar", "estimacion", "sesion", "actualizacion",
@@ -62,9 +65,9 @@ SUPPORT = {
     "combustible": r"\b(combustible|gasolina|fuel|deposito|kg|litros?|consum\w*|margen|ahorr\w*|queda\w*|llevo)\b",
     "plan_carrera": r"\b(carrera|plan|estrategia|vueltas|gp|distancia)\b",
     "como_adelantar": r"\b(adelant\w*|pas(?:o|a|ar|arlo|arle|arla)|pillo|pillar|gano|ganar|ataco|atacar|supero|superar\w*)\b",
-    "parar_ya": r"\b(par\w*|box\w*|entr\w*|pit|cambi\w*|neumatic\w*|gomas?)\b",
+    "parar_ya": r"\b(par\w*|box\w*|entr\w*|pits?|cambi\w*|neumatic\w*|gomas?)\b",
     # una hipótesis de parada habla de parar, alargar o de un compuesto («¿me alcanza la gasolina si ataco?» no lo es)
-    "que_pasa_si": r"\b(par[oaei]\w*|box\w*|entr\w*|alarg\w*|aguant\w*|sigo|seguir|duros?|medios?|blandos?|neumatic\w*|gomas?)\b",
+    "que_pasa_si": r"\b(par[oaei]\w*|box\w*|entr\w*|pits?|alarg\w*|aguant\w*|sigo|seguir|duros?|medios?|blandos?|neumatic\w*|gomas?)\b",
 }
 # una frase larga sin pregunta ni orden es una afirmación del piloto («termino el entrenamiento con el medio»): se acusa recibo
 ASK_MARK = re.compile(r"\b(que|cual|cuales|cuanto|cuanta|cuantos|cuantas|como|donde|cuando|quien|quienes|puedes|puedo|podria|podemos|"
@@ -90,6 +93,13 @@ ROUTER_PLAN = ("\n- Antes de \"tools\", escribe \"plan\": como mucho 12 palabras
 SYS_ROUTER = (
     "Eres el cerebro de un ingeniero de pista de F1 que habla con su piloto por radio. Recibes la frase del piloto (transcrita "
     "de voz, puede tener errores) y decides qué HERRAMIENTAS del programa consultar. No inventes datos.\n"
+    "Tu trabajo es ENTENDER LA INTENCIÓN, no buscar palabras: el piloto habla corto y sin signos de pregunta (la voz no los pone). "
+    "Pregúntate qué quiere saber o hacer según la situación (campo 'yo', 'plan_aceptado', 'propuesta_pendiente') y elige la herramienta "
+    "que mejor lo resuelve aunque la frase no se parezca a ningún ejemplo. Las cifras las pone siempre el programa, nunca tú.\n"
+    "- Frases cortas sobre parar son PREGUNTAS: 'paro', 'entro', 'voy a pits', 'toca parar', 'cambio gomas', 'paro ya' = ¿debo entrar "
+    "a boxes? -> parar_ya. Solo es una afirmación si es larga y cuenta algo ya hecho ('entré a boxes en la 9').\n"
+    "- 'qué tan lejos estoy del líder', 'cuánto le saco/me saca el primero' -> hueco con con=lider.\n"
+    "- 'cómo vamos', 'cómo estamos', 'qué tal' pide estado: actualizacion (no respondas tú con ánimos ni valoraciones).\n"
     "Responde SOLO JSON: {\"tools\":[{\"t\":\"<herramienta>\", ...args}], \"say\":\"\"}.\n"
     "- Usa UNA herramienta, salvo que el piloto pida claramente dos cosas. Pon 'driver' SOLO si el piloto nombra a alguien "
     "(nombre EXACTO de la lista 'pilotos', corrigiendo errores de voz); 'neumaticos' sin driver = los míos.\n"
@@ -152,7 +162,7 @@ def unaccent(s):
 CHAT_TOPICS = {"blando", "medio", "duro", "intermedio", "lluvia", "boxes", "undercut", "overcut", "combustible", "bateria", "ers", "drs"}
 
 
-CHAT_PHRASES = re.compile(r"\bno (te )?(entiendo|comprendo)\b")
+CHAT_PHRASES = re.compile(r"\bno (te )?(entiendo|comprendo)\b|\b(vamos|vas|voy|vais|va|todo) (muy )?bien\b|\b(vamos|vas|vais) (de )?(maravilla|genial)\b")
 CHAT_BANNED = {"iniciando", "abriendo", "arrancando", "configurando", "preparando", "victoria", "ganar", "ganaremos", "ganaras", "ganamos", "podio", "posible", "seguro", "ajustando", "subiendo", "bajando",
                "poniendo", "activando", "muestro", "mostrando", "aplicando", "cambiando", "guardado", "guardados"}
 
@@ -178,6 +188,7 @@ class Brain:
         self.cfg_llm = c
         self.eng, self.client = eng, client
         self.compose_on = c.get("compose", True)
+        self.trust_reads = c.get("trust_reads", False)
         self.cooldown_s = c.get("down_cooldown_s", 30.0)
         self.down_until = 0.0
         self.history = deque(maxlen=2)               # (pregunta, respuesta recortada)
@@ -265,7 +276,8 @@ class Brain:
             if not (isinstance(t, dict) and t.get("t") in TOOLS):
                 continue
             key = json.dumps(t, sort_keys=True)
-            if key in seen or (t["t"] in SUPPORT and not re.search(SUPPORT[t["t"]], plain)):
+            needs = t["t"] in SUPPORT and (t["t"] in ACT_SUPPORT or not self.trust_reads)
+            if key in seen or (needs and not re.search(SUPPORT[t["t"]], plain)):
                 continue                                         # repetida, o acción de estado sin respaldo en la frase
             seen.add(key)
             calls.append(t)
@@ -299,6 +311,17 @@ class Brain:
         return {"silencio": "me calle y solo avise de lo crítico", "objetivo": "fije ese objetivo", "gomas_mal": "asuma que las gomas rinden peor",
                 "avisos": "cambie los avisos", "parar_ya": "evalúe parar ahora"}.get(tool, "haga eso")
 
+    def leader(self):
+        """(idx, nombre) del coche en P1, o None si soy yo o no se sabe."""
+        tr = self.eng.tr
+        try:
+            for i, c in enumerate(tr.lap_all):
+                if c and c["position"] == 1 and c["result_status"] == 2:
+                    return None if i == tr.player else (i, tr.name(i))
+        except (AttributeError, KeyError, TypeError):
+            pass
+        return None
+
     def intent_from_tool(self, t, text=None):
         from assistant import Intent, INTENTS
         tr = self.eng.tr
@@ -320,6 +343,15 @@ class Brain:
             driver = self.last_driver                          # «¿y qué gomas lleva?» tras hablar de Alves: el modelo no puso el piloto
         pos = t.get("pos") if isinstance(t.get("pos"), int) and 1 <= t["pos"] <= 22 else None
         mk = lambda n, **k: Intent(n, driver=driver, ambiguous=ambiguous, source="llm", **k)
+        wants_leader = name == "hueco" and t.get("con") in ("lider", "primero") or (
+            name == "piloto" and pos == 1 and text is not None
+            and re.search(r"\b(lejos|distancia|hueco|saca|saco|a cuanto|cuanto (le|me))\b", tr.plain(text)))
+        if wants_leader and not driver:
+            ld = self.leader()
+            if ld is None:
+                return mk("posicion")                           # el líder soy yo (o no hay datos): la posición lo dice
+            driver = ld
+            return mk("hueco")
         if name == "hueco":
             if t.get("dir") == "delante" and not driver:
                 return mk("hueco_delante")

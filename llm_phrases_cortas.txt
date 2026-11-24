@@ -1,0 +1,29 @@
+# Frases cortas y sin signos (Whisper no pone «¿?») para medir cuánto entiende el LLM real: python voice.py llm --phrases llm_phrases_cortas.txt
+# formato: frase | herramienta esperada (a/b = cualquiera vale)
+paro | parar_ya
+¿paro? | parar_ya
+entro | parar_ya
+¿entro? | parar_ya
+voy a pits | parar_ya
+¿voy a pits? | parar_ya
+¿entro a pits? | parar_ya
+toca parar | parar_ya/estrategia/ventana_parada
+¿toca parar ya? | parar_ya/estrategia/ventana_parada
+cambio gomas | parar_ya
+¿cambio gomas? | parar_ya
+¿paro ahora o espero? | parar_ya/estrategia/que_pasa_si
+¿cuándo paro? | estrategia/ventana_parada
+¿qué tan lejos estoy del líder? | hueco
+a cuánto está el primero | hueco
+¿cuánto me saca el líder? | hueco
+¿quién va primero? | piloto
+¿cómo vamos? | actualizacion
+cómo estamos | actualizacion
+¿qué tal vamos? | actualizacion
+¿voy bien? | posicion/actualizacion
+¿en qué puesto voy? | posicion
+¿cómo están las gomas? | neumaticos
+¿me alcanza la gasolina? | combustible
+¿cómo está el coche? | estado_coche/danos
+¿va a llover? | clima
+¿y si no paro? | que_pasa_si

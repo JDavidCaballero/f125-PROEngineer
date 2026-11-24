@@ -231,10 +231,16 @@ def tts_name(cfg):
     return ((cfg or {}).get("voice", {}) or {}).get("tts", "auto")
 
 
+class _Item(tuple):
+    """(prio, texto) con la hora en que se pidió: así un aviso que esperó demasiado se descarta en vez de sonar tarde."""
+    t = 0.0
+
+
 class Speaker:
     def __init__(self, voice=None, rate=190, popen=subprocess.Popen, enabled=True, on_event=None, backend=None,
-                 run=subprocess.run):
+                 run=subprocess.run, max_age_s=8.0):
         self.voice, self.rate, self.popen, self.enabled = voice, rate, popen, enabled
+        self.max_age_s = max_age_s                       # un aviso informativo que espera más que esto ya no sirve: se descarta (0 = nunca)
         self.backend = backend or SayTTS()               # por defecto `say`, exactamente como antes
         self.run = run                                   # solo para `spd-say -C` al cortar
         if not self.backend.available:                   # sin motor: como --no-voice (no se dice nada)
@@ -253,7 +259,7 @@ class Speaker:
         self.worker = threading.Thread(target=self._run, daemon=True)
         self.worker.start()
 
-    def say(self, text, prio=2):
+    def say(self, text, prio=2, expires=True):
         if not self.enabled or not text:
             return False
         with self.cv:
@@ -261,7 +267,7 @@ class Speaker:
                 if prio >= 3:
                     self.dropped.append((text, "piloto hablando"))
                     return False
-                self.hold_q.append((prio, text))
+                self.hold_q.append(self._item(prio, text, expires))
                 return True
             if prio >= 3 and (self.busy or self.q):
                 self.dropped.append((text, "ocupado"))
@@ -269,13 +275,20 @@ class Speaker:
             if prio <= 1:
                 self.q = deque(x for x in self.q if x[0] <= 1)
                 self._kill()
-                self.q.appendleft((prio, text))
+                self.q.appendleft(self._item(prio, text, expires))
             else:
                 if len(self.q) >= 3:
                     self.dropped.append((self.q.popleft()[1], "cola llena"))
-                self.q.append((prio, text))
+                self.q.append(self._item(prio, text, expires))
             self.cv.notify()
         return True
+
+    @staticmethod
+    def _item(prio, text, expires=True):
+        it = _Item((prio, text))
+        it.t = time.monotonic()                          # monótono: un cambio de hora del sistema no descarta la cola
+        it.expires = expires
+        return it
 
     def hold(self):
         """El piloto empieza a hablar: corta lo que suena y retiene los avisos nuevos (el micrófono no debe oírlos)."""
@@ -295,6 +308,8 @@ class Speaker:
                 if (_, t) not in keep:
                     self.dropped.append((t, "retenido y viejo"))
             self.hold_q = []
+            for it in keep:
+                it.t = time.monotonic()                  # la espera mientras hablabas el piloto no cuenta como «viejo»
             self.q.extend(sorted(keep, key=lambda x: x[0]))
             self.cv.notify()
 
@@ -330,7 +345,13 @@ class Speaker:
                     self.cv.wait()
                 if self._stop:
                     return
-                prio, text = self.q.popleft()
+                item = self.q.popleft()
+                prio, text = item
+                stale = (prio >= 2 and self.max_age_s and getattr(item, "expires", True) and getattr(item, "t", 0)
+                         and time.monotonic() - item.t > self.max_age_s)
+                if stale:                                # sonaría tarde (sprint del 11 nov: «Contacto con X» 14 s después, detrás de un plan de 19 s)
+                    self.dropped.append((text, "caducado"))
+                    continue
                 self.busy = True
             cmd, data = self.backend.command(to_speech(text), self.voice, self.rate)
             t0 = time.time()

@@ -7,7 +7,7 @@ Cada ejecución de voice.py crea runs/session-<fecha>/ con:
   voice.jsonl   lo que dijiste / entendió / respondió / tiempos (sin audio)
   engine.jsonl  decisiones del ingeniero: propuestas, silencios, estrategia
   audio/        tus frases grabadas (si no usaste --no-audio): se quedan en TU Mac y NO van al informe
-  INFORME.txt   resumen de auditoría + errores + consola + registros: es el único archivo que hace falta adjuntar a un issue
+  INFORME.txt   resumen de auditoría + errores + consola + registros: es el único archivo que hace falta enviarme
 """
 import importlib.metadata as md
 import json, platform, sys, threading, traceback
