@@ -114,6 +114,7 @@ class RaceTracker:
         self.dmg_onset, self.dmg_aero = None, 0.0       # vuelta del último golpe aerodinámico y su daño
         self.fuel_lap_start = None
         self.cur_lap = 0
+        self.finished = False
         self.stint = []             # (edad_en_vueltas, desgaste_max)
         self.last_age = None
         self.last_comp = None
@@ -234,6 +235,9 @@ class RaceTracker:
             prev, self.cur_lap = self.cur_lap, me["lap"]
             self._record_gaps(prev)
             sig.append(("lap", me["lap"], prev))
+        if me["result_status"] == 3 and not self.finished:      # cruzaste la meta: el juego no siempre manda la clasificación final (no llegó en el sprint del 11 nov)
+            self.finished = True
+            sig.append(("finish", me["position"]))
         pit = 0 if me["pit_status"] == 0 else 1
         if pit:
             self._pl, self._ps = max(self._pl, me["pit_lane_ms"]), max(self._ps, me["pit_stop_ms"])

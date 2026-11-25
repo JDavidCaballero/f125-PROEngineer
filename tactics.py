@@ -63,6 +63,7 @@ class Tactics:
         self.lapsum_prev = -99    # última vuelta con resumen hablado
         self.tyre_hot = {}        # (tipo, rueda) -> {peak, lap, age}: avisos de temperatura dinámicos por juego de neumáticos
         self.defend_ep, self.attack_ep = {}, {}   # coche -> episodio de duelo ya avisado
+        self._ovtk_last = {}                      # coche -> (sentido, tiempo) del último adelantamiento que se dijo
         self.drs_seen = {}        # coche al que se atacó con DRS -> vuelta del último aviso (None = DRS sin rival cerca)
         self.rain_alerted = None  # (probabilidad, minutos) del último aviso de lluvia
         self.last_weather = None
@@ -121,15 +122,19 @@ class Tactics:
                 out += self._on_lap(tr, s[1], s[2])
             elif kind == "final":
                 out += self._final(tr, s[1])
+            elif kind == "finish":
+                out += self._finish(tr, s[1])
         return out
 
     def _event(self, tr, e):
         out, code, me = [], e["code"], tr.player
         if code == "OVTK":
             if e["car"] == me:
-                out.append(Alert(f"Adelantaste a {tr.name(e['overtaken'])}.", 3, "ovtk", 5))
+                if self._ovtk_new(tr, e["overtaken"], "to"):
+                    out.append(Alert(f"Adelantaste a {tr.name(e['overtaken'])}.", 3, f"ovtk_to{e['overtaken']}", 3))
             elif e["overtaken"] == me:
-                out.append(Alert(f"{tr.name(e['car'])} te adelantó.", 3, "ovtk", 5))
+                if self._ovtk_new(tr, e["car"], "by"):
+                    out.append(Alert(f"{tr.name(e['car'])} te adelantó.", 3, f"ovtk_by{e['car']}", 3))
         elif code == "PENA" and e.get("car") == me:
             t = PENALTY.get(e["penalty_type"])
             if t:
@@ -154,6 +159,25 @@ class Tactics:
         elif code == "CHQF":
             out.append(Alert("Bandera a cuadros.", 2, "chqf", 30))
         return out
+
+    def _ovtk_new(self, tr, car, way):
+        """¿Hay algo nuevo que decir de este adelantamiento? El mismo piloto en el MISMO sentido no se repite en 20 s (vuelta 1 del sprint del 11 nov:
+        «Verstappen te adelantó» tres veces en 12 s), pero un CAMBIO de sentido siempre se dice: si te pasa y lo recuperas, el piloto debe saberlo."""
+        now = getattr(tr, "t", None)
+        last = self._ovtk_last.get(car)
+        if last and last[0] == way and now is not None and last[1] is not None and now - last[1] < 20:
+            return False
+        self._ovtk_last[car] = (way, now)
+        return True
+
+    def _finish(self, tr, pos):
+        """Cruzas la meta: el resultado se dice aunque el juego no mande la clasificación final (en el sprint del 11 nov nunca llegó)."""
+        if not tr.is_race() or not pos:
+            return []
+        h = tr.hist.get(tr.player)
+        laps = [l["ms"] for l in (h["laps"] if h else []) if l["ms"] > 0]
+        best = f" Tu mejor vuelta: {mmss(min(laps) / 1000)}." if laps else ""
+        return [Alert(f"Terminas P{pos}.{best}", 2, "finish", 60)]
 
     def _final(self, tr, fin):
         me = next((c for c in fin["cars"] if c["idx"] == tr.player), None)
@@ -505,9 +529,14 @@ class Tactics:
             rs = tr.sta_all[behind[0]]
             drs = " con DRS" if (rs and rs["drs_allowed"] and self.year < 2026) else ""
             ep = self.defend_ep.get(behind[0])
-            # un duelo se avisa una vez; de nuevo a las 3 vueltas si sigue, o cuando por fin le abren el DRS
-            if ep is None or lap - ep["lap"] >= 3 or (drs and not ep["drs"]):
-                self.defend_ep[behind[0]] = {"lap": lap, "seen": lap, "drs": bool(drs) or bool(ep and ep["drs"])}
+            # un duelo se avisa una vez; de nuevo a las 3 vueltas si sigue, o cuando por fin le abren el DRS (salvo que se acabe de avisar:
+            # sprint del 11 nov, «defiende» y «defiende con DRS» con 1.5 s de diferencia)
+            now = getattr(tr, "t", None)
+            recent = ep is not None and now is not None and ep.get("t") is not None and now - ep["t"] < 8.0
+            if drs and recent and not ep["drs"]:
+                ep["drs"] = True
+            elif ep is None or lap - ep["lap"] >= 3 or (drs and not ep["drs"]):
+                self.defend_ep[behind[0]] = {"lap": lap, "seen": lap, "t": now, "drs": bool(drs) or bool(ep and ep["drs"])}
                 add(Alert(f"Tienes a {tr.name(behind[0])} a {behind[1]:.1f} s detrás{drs}: defiende.", 2,
                           "defend_drs" if drs else "defend", 30 if drs else 60))
         return out

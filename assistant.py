@@ -323,7 +323,10 @@ def parse_rules(tr, text):
         return mk("cerrar")
     if re.search(r"cuantas vueltas|vueltas (quedan|faltan)|cuanto falta|cuanto dura la carrera", t):
         return mk("vueltas")
-    if has("posicion", "puesto", "voy") and not has("pasar"):
+    if re.search(r"\b(voy a|toca|debo|tengo que)\b.*\b(pits?|box\w*|par\w+|entr\w+)\b|\b(pits?|boxes|paro|entro|parar)\b", t) \
+            and "?" in text and len(t.split()) <= 5 and not has("pasar", "posicion", "puesto"):
+        return mk("parar_ya")                            # «¿paro?», «¿voy a pits?», «¿entro?»: pregunta si entrar a boxes (sin LLM)
+    if (has("posicion", "puesto") or (has("voy") and not re.search(r"\bvoy a\b", t))) and not has("pasar"):
         return mk("posicion")
     # afirmaciones del piloto sobre lo que hace («empiezo vuelta lanzada», «entro a boxes»): se acusa recibo, sin inventar nada
     if "?" not in text and re.match(r"^(ok |vale |bien |listo |bueno )?(voy a|empiezo|inicio|termino|finalizo|me preparo|salgo|entro|entran?|entren|entrando|regreso|vuelvo|acabo|comienzo)\b", t):
@@ -949,9 +952,16 @@ class Assistant(SessionAnswers):
         opt = self._pit_now_option(rep, sit)
         if opt is None:
             return "No hay una parada válida ahora (quedan pocas vueltas o falta algún dato)."
+        eng = self.eng
+        pend, acc = eng.dialog.pending, eng.dialog.accepted
+        ctx = ""
+        if pend:
+            ctx = "Esto sustituye a la propuesta anterior. "
+        elif acc and getattr(acc.option, "stops", None):
+            ctx = f"El plan aceptado era parar en la vuelta {acc.option.stops[0][0]}. "
         self._propose(rep, opt, sit)
         cost = rep.best.utility - opt.utility
-        txt = f"Si paras ahora a {S.NAME[opt.stops[0][1]]}, la posición final esperada es P{opt.e_pos:.1f}."
+        txt = ctx + f"Si paras ahora a {S.NAME[opt.stops[0][1]]}, la posición final esperada es P{opt.e_pos:.1f}."
         if rep.best.id != opt.id:
             txt += f" La mejor opción es {rep.best.desc.lower()} (P{rep.best.e_pos:.1f}); parar ahora cuesta {cost:.1f} puntos."
             return txt + " ¿Entro a boxes igualmente?"

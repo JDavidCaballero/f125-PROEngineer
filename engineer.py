@@ -119,7 +119,7 @@ class Engineer:
             if len(self.pending) < 5:
                 self.pending.append((t, text, key, cooldown))
             return False
-        self._speak(text, key, prio)
+        self._speak(text, key, prio, force)
         return True
 
     def _within_budget(self, prio, text, key, t):
@@ -142,7 +142,7 @@ class Engineer:
         self.budget_n[prio] = self.budget_n.get(prio, 0) + 1
         return True
 
-    def _speak(self, text, key, prio=2):
+    def _speak(self, text, key, prio=2, force=False):
         t = self.tr.t
         if key:
             self.cool[key] = t
@@ -151,6 +151,7 @@ class Engineer:
         self.lap_seen = lap
         self.out(f"[vuelta {lap} | t={t:6.1f}s] {text}")
         self.log.append(text)
+        self.say_forced = bool(force)                # propuestas y respuestas: la voz no debe dejarlas caducar
         for cb in self.on_say:
             cb(text, prio)
         self._log({"type": "say", "t": round(t, 1), "lap": lap, "prio": prio, "text": text})
@@ -419,7 +420,7 @@ class Engineer:
         self._log({"type": "preplan", "text": text, "why": why})
         self.preplan = getattr(self, "_last_plan", None) if text else None
         if text:
-            self.say(text, 2, "preplan", 9999)
+            self.say(raceplan.short(self.preplan, text, n) if self.preplan else text, 2, "preplan", 9999)
 
     def _maybe_strategy(self, sig):
         tr = self.tr
@@ -760,6 +761,7 @@ class LinkWatch:
         self.no_data_s, self.every_s = no_data_s, every_s
         self.t0 = self.last = self.clock()
         self.n, self.first, self.said_stop, self.next_status = 0, None, False, None
+        self.said_wait, self.last_status_n = False, None
 
     def packet(self):
         now = self.clock()
@@ -775,6 +777,9 @@ class LinkWatch:
         if self.first is None:
             if now - self.last >= self.no_data_s:
                 self.last = now - self.no_data_s + 30            # se repite cada 30 s mientras no llegue nada
+                if self.said_wait:                                # la primera vez se explica todo; después, solo que sigue igual
+                    return f"** No me llega ningún dato del juego todavía (UDP {self.port}). **"
+                self.said_wait = True
                 ip = local_ip()
                 return (f"** No me llega ningún dato del juego en el puerto UDP {self.port}. Revisa en el juego (Ajustes > Telemetría): "
                         f"telemetría UDP activada, IP = {ip or 'la de este equipo'}, puerto = {self.port}, formato UDP 2025. "
@@ -785,6 +790,9 @@ class LinkWatch:
             return "** Han dejado de llegar datos del juego (¿pausa, menús o el juego se cerró?). Sigo escuchando. **"
         if self.next_status is not None and now >= self.next_status:
             self.next_status = now + self.every_s
+            if self.last_status_n == self.n:                      # con el juego en pausa o en menús el contador no cambia: no se repite la línea
+                return None
+            self.last_status_n = self.n
             tr = getattr(self.eng, "tr", None)
             fmt = getattr(tr, "fmt", None)
             kind = tr.session_kind() if tr is not None and tr.ses else "sin sesión aún"

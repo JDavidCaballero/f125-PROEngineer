@@ -32,6 +32,7 @@ send_enable_thinking_false = false   # solo si tu servidor sigue "pensando" por 
 reasoning_effort = "none"            # se manda en cada petición: "none" = sin razonar aunque LM Studio tenga Think ("auto" = no mandarlo)
 # router_plan = false                # experimento: el modelo escribe un plan corto antes de elegir herramientas
 # router_reasoning = "low"           # experimento: razonamiento nativo solo para elegir herramientas (más lento)
+# trust_reads = true                 # experimento: el modelo manda en herramientas de LECTURA sin pedir palabras clave (medir con `python voice.py llm` antes de activar)
 # router_max_tokens = 120
 
 [thresholds]

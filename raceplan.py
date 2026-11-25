@@ -200,6 +200,22 @@ def options(total_laps, tables, p, pit_loss, rule=None, limit=None, top=3, start
     return picked, {"rate": rate, "est": est, "life": life, "off": off, "base": base}
 
 
+def short(plan, full, n):
+    """Lo que se dice por radio al empezar la carrera: UNA frase con el plan. El texto completo (alternativa, avisos de lo que no incluye) sigue en el
+    registro y se oye al preguntar por la estrategia. Informe del 11 nov (sprint): el completo eran 51 palabras ≈ 19 s de voz en la vuelta 1 y
+    retrasaba 14 s las alertas de contacto y de adelantamiento."""
+    try:
+        lead = ""
+        if full.startswith("Ojo:"):                         # datos viejos: esa advertencia sí se conserva
+            lead = full.split(". ")[0] + ". "
+        # de dónde sale el plan SÍ se dice (medido en entrenos o estimado): cambia cuánto fiarse de él
+        origen = ", sin datos de entrenos" if plan.get("estimated") else " con lo medido en entrenos"
+        kind = "estimado" if plan.get("estimated") else "previo"
+        return f"{lead}Plan {kind} para {int(n)} vueltas{origen}: {stints_txt(plan)}."
+    except (KeyError, TypeError, IndexError, AttributeError, ValueError):
+        return full
+
+
 def stints_txt(o):
     """«Sal con Blando, para en la vuelta 20 y monta Medio» (como lo diría un ingeniero por radio)."""
     st = o["stints"]
